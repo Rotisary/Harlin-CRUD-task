@@ -1,0 +1,12 @@
+{% extends 'movies/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="login-container">
+    <form method="POST">
+    {% csrf_token %}
+        <label for="code">Enter Code</label>
+        <input type="number" id="code" name="code" required>
+        <button type="submit" class="login-button">Verify</button>
+    </form>
+</div>
+{% endblock %}

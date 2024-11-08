@@ -1,0 +1,82 @@
+{% extends 'movies/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="filter-container">
+    <form action="{% url 'movies-list' %}" method="get">
+        <label for="category">Category:</label>
+        <select name="category" id="category">
+            <option value="">All Categories</option>
+            <option value="movie">Movie</option>
+            <option value="tv_show">TV Show</option>
+            <option value="series">Series</option>
+            <option value="cartoon">Cartoon</option>
+            <option value="animation">Animation</option>
+            <option value="anime">Anime</option>
+        </select>
+
+        <label for="genre">Genre:</label>
+        <select name="genre" id="genre">
+            <option value="">All Genres</option>
+            <option value="action">Action</option>
+            <option value="thriller">Thriller</option>
+            <option value="comedy">Comedy</option>
+            <option value="drama">Drama</option>
+            <option value="horror">Horror</option>
+            <option value="sci_fi">Sci-Fi</option>
+            <option value="roamnce">Romance</option>
+            <option value="tragedy">Tragedy</option>
+            <option value="fantasy">Fantasy</option>
+            <option value="musical">Musical</option>
+        </select>
+
+        <button type="submit" class="filter-button">Filter</button>
+    </form>
+</div>
+<table class="movie-table">
+    <thead>
+        <tr>
+            <th>Posted By</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Genre</th>
+            <th>Rating</th>
+        </tr>
+    </thead> 
+    <tbody>
+        {% for movie in movies %}
+            <tr>
+                <td>{{movie.posted_by.username }}</td>
+                <td><a class="table-link" href="{% url 'movie-detail' movie.title movie.id %}">{{movie.title }}</a></td>
+                <td>{{ movie.category }}</td>
+                <td>{{ movie.genre }}</td>
+                <td>{{ movie.rating }}<label for="star5" class="star">&#9733;</label></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="paginator-link-group">
+    {% if page_obj.has_previous %}
+        <a class="form-button" href="?page=1">First</a>
+        <a class="form-button" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+        
+    {% if num_of_pages == 1 %}
+
+    {% else %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="form-button" href="?page={{ num }}">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a class="form-button" href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if page_obj.has_next %}
+        <a class="form-button" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="form-button" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'movies/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div>
+    <form method="POST">
+    {% csrf_token %}
+    <legend class="border-bottom mb-4" style="text-align: center;" >Add a Movie!</legend>
+    {{ form|crispy }}
+    <div style="text-align: center;">
+        <button type="submit" class="form-button">add movie</button>
+    </div>
+    </form>
+</div>
+{% endblock %}
