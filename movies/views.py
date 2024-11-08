@@ -108,27 +108,31 @@ def rate_movie(request, title, pk):
     movie = Movie.objects.get(title__iexact=title, id=pk)
     if request.method == "POST":
         stars = int(request.POST.get('rating', 0))
-        if stars >= 1 and stars <= 5: 
-            movie_rating = MovieStar.objects.create(stars=stars,
-                                                    movie=movie,
-                                                    rated_by=request.user)
-            movie_rating.save()
-
-            # update movie's rating
-            ratings_of_movie = movie.ratings.all()
-            sum_of_stars = 0
-            for rating in ratings_of_movie:
-                sum_of_stars += rating.stars
-            try:
-                computed_rating = sum_of_stars/ratings_of_movie.count()
-                movie.rating = round(computed_rating, 1)
-                movie.save()
-            except ZeroDivisionError:
-                movie.rating = 0
-            return HttpResponseRedirect(reverse('movie-detail', kwargs={'title': movie.title, 'pk': movie.id}))
+        if MovieStar.objects.filter(movie=movie, rated_by=request.user).exists():
+            messages.info(request, 'you have already rated this movie')
+            HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            messages.info(request, 'your rating cannot be 0')
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            if stars >= 1 and stars <= 5: 
+                movie_rating = MovieStar.objects.create(stars=stars,
+                                                        movie=movie,
+                                                        rated_by=request.user)
+                movie_rating.save()
+
+                # update movie's rating
+                ratings_of_movie = movie.ratings.all()
+                sum_of_stars = 0
+                for rating in ratings_of_movie:
+                    sum_of_stars += rating.stars
+                try:
+                    computed_rating = sum_of_stars/ratings_of_movie.count()
+                    movie.rating = round(computed_rating, 1)
+                    movie.save()
+                except ZeroDivisionError:
+                    movie.rating = 0
+                return HttpResponseRedirect(reverse('movie-detail', kwargs={'title': movie.title, 'pk': movie.id}))
+            else:
+                messages.info(request, 'your rating cannot be 0')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
   
     context = {'movie': movie}
     return render(request, 'movies/rate_movie.html', context)
