@@ -1,7 +1,7 @@
 {% extends 'movies/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-
+<div class="container">
 <div class="filter-container">
     <form action="{% url 'movies-list' %}" method="get">
         <label for="category">Category:</label>
@@ -78,5 +78,6 @@
         <a class="form-button" href="?page={{ page_obj.next_page_number }}">Next</a>
         <a class="form-button" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
     {% endif %}
+</div>
 </div>
 {% endblock %}

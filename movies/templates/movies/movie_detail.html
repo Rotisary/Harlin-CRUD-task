@@ -1,54 +1,66 @@
 {% extends 'movies/base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
+<div class="container">
+    <table class="movie-table ">
+        <tbody>
+            <tr>
+                <th>Posted By</th>
+                <td>{{ movie.posted_by.username }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ movie.title }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ movie.category }}</td>
+            </tr>
+            <tr>
+                <th>Genre</th>
+                <td>{{ movie.genre }}</td>
+            </tr>
+            <tr>
+                <th>Star Actors</th>
+                <td>{{ movie.star_actors }}</td>
+            </tr>
+            <tr>
+                <th>Release Date</th>
+                <td>{{ movie.release_date }}</td>
+            </tr>
+            <tr>
+                <th>Rating <a href="{% url 'rate-movie' movie.title movie.id %}">rate movie</a></th>
+                <td>{{ movie.rating }}<label for="star5" class="star">&#9733;</label></td>
+            </tr>
 
-<table class="movie-table">
-    <tbody>
-        <tr>
-            <th>Posted By</th>
-            <td>{{ movie.posted_by.username }}</td>
-        </tr>
-        <tr>
-            <th>Title</th>
-            <td>{{ movie.title }}</td>
-        </tr>
-        <tr>
-            <th>Category</th>
-            <td>{{ movie.category }}</td>
-        </tr>
-        <tr>
-            <th>Genre</th>
-            <td>{{ movie.genre }}</td>
-        </tr>
-        <tr>
-            <th>Star Actors</th>
-            <td>{{ movie.star_actors }}</td>
-        </tr>
-        <tr>
-            <th>Release Date</th>
-            <td>{{ movie.release_date }}</td>
-        </tr>
-        <tr>
-            <th>Rating <a href="{% url 'rate-movie' movie.title movie.id %}">rate movie</a></th>
-            <td>{{ movie.rating }}<label for="star5" class="star">&#9733;</label></td>
-        </tr>
-        <tr>
-            <th>Seasons</th>
-            <td>{{ movie.seasons }}</td>
-        </tr>
-        <tr>
-            <th>Episodes</th>
-            <td>{{ movie.episodes }}</td>
-        </tr>
-    </tbody>
-</table>
-{% if user == movie.posted_by %}
-    <div class="movie-buttons">
-        <a class='form-button' href="{% url 'update-movie' movie.title movie.id %}">update movie</a>
-        <a class='form-button' href="{% url 'delete-movie' movie.title movie.id %}">delete movie</a>
-    </div>
-{% else %}
+            <tr>
+                {% if movie.seasons == 0 %}
+                    <th>Seasons</th>
+                    <td>Nil</td>
+                {% else %}
+                    <th>Seasons</th>
+                    <td>{{ movie.seasons }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                {% if movie.episodes == 0 %}
+                    <th>Episodes</th>
+                    <td>Nil</td>
+                {% else %}
+                    <th>Episodes</th>
+                    <td>{{ movie.episodes }}</td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+    {% if user == movie.posted_by %}
+        <div class="movie-buttons">
+            <a class='form-button' href="{% url 'update-movie' movie.title movie.id %}">update movie</a>
+            <a class='form-button' href="{% url 'delete-movie' movie.title movie.id %}">delete movie</a>
+        </div>
+    {% else %}
 
-{% endif %}
+    {% endif %}
+</div>
 
 {% endblock %}
